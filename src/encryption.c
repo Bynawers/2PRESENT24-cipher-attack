@@ -11,9 +11,7 @@
  * \param k : 11 sous clés de 24 bits
  * \return : tableau de 11 sous clé K[i] de 24 bits
  */
-void key_schedule(uint32_t master_key, uint32_t* k) {
-
-    int S[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
+void key_schedule(uint32_t master_key, uint32_t* k, int* S) {
 
     uint64_t master_higher_bits = ((uint64_t)master_key << 16);
     uint64_t master_lower_bits = 0x0;
@@ -41,9 +39,7 @@ void key_schedule(uint32_t master_key, uint32_t* k) {
  * \param etat : registre de 24 bits
  * \return : message de 24 bits substitué
  */
-uint32_t substitution(uint32_t etat) {
-
-    int S[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
+uint32_t substitution(uint32_t etat, int* S) {
 
     uint32_t mask_delete[6] = {0x0FFFFF, 0xF0FFFF, 0xFF0FFF, 0xFFF0FF, 0xFFFF0F, 0xFFFFF0};
     uint32_t mask_keep[6] = {0xF, 0x0F, 0x00F, 0x000F, 0x0000F, 0x00000F};
@@ -65,9 +61,7 @@ uint32_t substitution(uint32_t etat) {
  * \param etat : registre de 24 bits
  * \return message de 24 bits permuté
  */
-uint32_t permutation(uint32_t etat)  {
-
-    int P[24] = { 0, 6, 12, 18, 1, 7, 13, 19, 2, 8, 14, 20, 3, 9, 15, 21, 4, 10, 16, 22, 5, 11, 17, 23 };
+uint32_t permutation(uint32_t etat, int* P)  {
 
     uint64_t permutation = 0;
 
@@ -86,6 +80,10 @@ uint32_t permutation(uint32_t etat)  {
  * \return message chiffré de 24 bits
  */
 uint32_t encryption(uint32_t message, uint32_t* k) {
+
+    int P[24] = { 0, 6, 12, 18, 1, 7, 13, 19, 2, 8, 14, 20, 3, 9, 15, 21, 4, 10, 16, 22, 5, 11, 17, 23 };
+    int S[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
+
     uint32_t etat;
     uint32_t c;
     int i;
@@ -94,37 +92,12 @@ uint32_t encryption(uint32_t message, uint32_t* k) {
 
     for (i = 0; i < 10; i++) {
         etat = etat ^ k[i];
-        etat = substitution(etat);
-        etat = permutation(etat);
+        etat = substitution(etat, S);
+        etat = permutation(etat, P);
     }
     etat = etat ^ k[i];
 
     c = etat;
 
     return c;
-}
-
-
-int main() {
-
-    uint32_t message;
-    uint32_t message_test;
-    uint32_t master_key;
-    uint32_t k[11];
-    uint32_t encrypted_message;
-
-    message = 0x3af44f;
-    message_test = 0x000000;
-    master_key = 0x000000;
-
-    printf("MASTER KEY = %#06x\n", master_key);
-    printf("MESSAGE = %#06x\n", message);
-
-    key_schedule(master_key, k);
-
-    encrypted_message = encryption(message_test, k);
-    
-    printf("ENCRYPTED = %#06x\n", encrypted_message);
-
-    return 0;
 }

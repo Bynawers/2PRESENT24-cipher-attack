@@ -1,11 +1,8 @@
-debug: compil_main
-	valgrind --track-origins=yes ./encryption
+attack: attack.o
+	./attack.o
 
-encryption: encryption.o
-	./encryption.o
-
-encryption.o: src/encryption.c
-	gcc -Wall -o encryption.o src/encryption.c
+attack.o: src/attack.c clean
+	gcc -Wall -o attack.o src/*.c
 
 clean:
-	rm -f encryption.o
+	rm -f attack.o

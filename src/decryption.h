@@ -1,0 +1,1 @@
+uint32_t decryption(uint32_t message, uint32_t* k);
