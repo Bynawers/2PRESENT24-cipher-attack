@@ -1,8 +1,8 @@
-attack: attack.o
-	./attack.o
+main: main.o
+	./main.o
 
-attack.o: src/attack.c clean
-	gcc -Wall -o attack.o src/*.c
+main.o: src/main.c clean
+	gcc -Wall -o main.o src/*.c
 
 clean:
-	rm -f attack.o
+	rm -f main.o

@@ -11,7 +11,9 @@
  * \param k : 11 sous clés de 24 bits
  * \return : tableau de 11 sous clé K[i] de 24 bits
  */
-void key_schedule(uint32_t master_key, uint32_t* k, int* S) {
+void key_schedule(uint32_t master_key, uint32_t* k) {
+
+    int S[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
 
     uint64_t master_higher_bits = ((uint64_t)master_key << 16);
     uint64_t master_lower_bits = 0x0;
@@ -96,6 +98,34 @@ uint32_t encryption(uint32_t message, uint32_t* k) {
         etat = permutation(etat, P);
     }
     etat = etat ^ k[i];
+
+    c = etat;
+
+    return c;
+}
+
+/**
+ * \details : Chiffrement double 2PRESENT24
+ * 
+ * \param message : registre de 24 bits
+ * \param master_key1 : registre de 24 bits de la clé maitre k1
+ * \param master_key1 : registre de 24 bits de la clé maitre k2
+ * \return message chiffré 2PRESENT24 de 24 bits
+ */
+uint32_t double_encryption(uint32_t message, uint32_t master_key1, uint32_t master_key2) {
+
+    uint32_t k1[11];
+    uint32_t k2[11];
+    uint32_t etat;
+    uint32_t c;
+
+    key_schedule(master_key1, k1);
+    key_schedule(master_key2, k2);
+
+    etat = message;
+    
+    etat = encryption(etat, k1);
+    etat = encryption(etat, k2);
 
     c = etat;
 

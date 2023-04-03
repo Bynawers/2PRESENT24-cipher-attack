@@ -1,0 +1,1 @@
+uint32_t attack(uint32_t clair, uint32_t chiffré, uint32_t clair2, uint32_t chiffré2);
