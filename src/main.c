@@ -5,7 +5,6 @@
 #include "attack.h"
 
 int main() {
-
     // Chronomètre
     clock_t debut, fin;
     double temps_ecoule;
@@ -22,13 +21,13 @@ int main() {
     c2 = 0x4afd12;
 
     attack(m1, c1, m2, c2);
-    
+
     /**   FIN   **/
 
     // Calcul et affiche le temps écoulé en secondes
     fin = clock();
     temps_ecoule = (double)(fin - debut) / CLOCKS_PER_SEC;
-    printf("Le temps d'execution est de %f secondes.\n", temps_ecoule);
+    printf("Le temps d'execution total est de %f secondes.\n", temps_ecoule);
 
     return 0;
 }
